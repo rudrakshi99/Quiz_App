@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Quizzes, Question, Answer, UsersAnswer, QuizTakers, Category
+from .models import Quizzes, Question, Answer, UsersAnswer, QuizTaker, Category
 import nested_admin
 
 class AnswerInline(nested_admin.NestedTabularInline):
@@ -22,7 +22,7 @@ class QuizTakersAdmin(admin.ModelAdmin):
     inlines = [UsersAnswerInline,]
     
     
-admin.site.register(QuizTakers, QuizTakersAdmin)
+admin.site.register(QuizTaker, QuizTakersAdmin)
 admin.site.register(Quizzes, QuizAdmin)
 admin.site.register(UsersAnswer)
 admin.site.register(Category)

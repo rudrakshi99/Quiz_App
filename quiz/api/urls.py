@@ -6,4 +6,7 @@ urlpatterns = [
      path("my-quizzes/", MyQuizListAPI.as_view()),
 	path("quizzes/", QuizListAPI.as_view()),
 	path("save-answer/", SaveUsersAnswer.as_view()),
+ 	path("quizzes/<id>", QuizDetailAPI.as_view()),
+	path("quizzes/<id>/submit/", SubmitQuizAPI.as_view()),
+
 ]

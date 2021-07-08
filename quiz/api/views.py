@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from quiz.models import Answer, Question, QuizTakers, Quizzes, UsersAnswer
+from quiz.models import Answer, Question, QuizTaker, Quizzes, UsersAnswer
 from .serializers import  MyQuizListSerializer, QuizDetailSerializer, QuizListSerializer, QuizResultSerializer, UsersAnswerSerializer
 from rest_framework import status
 
@@ -19,8 +19,7 @@ class MyQuizListAPI(generics.ListAPIView):
 
 		if query:
 			queryset = queryset.filter(
-				Q(name__icontains=query) |
-				Q(description__icontains=query)
+				Q(title__icontains=query) 
 			).distinct()
 
 		return queryset
@@ -38,8 +37,7 @@ class QuizListAPI(generics.ListAPIView):
 
 		if query:
 			queryset = queryset.filter(
-				Q(name__icontains=query) |
-				Q(description__icontains=query)
+				Q(title__icontains=query) 
 			).distinct()
 
 		return queryset
@@ -55,7 +53,7 @@ class QuizDetailAPI(generics.RetrieveAPIView):
 		id = self.kwargs["id"]
 		quiz = get_object_or_404(Quizzes, id=id)
 		last_question = None
-		obj, created = QuizTakers.objects.get_or_create(user=self.request.user, quiz=quiz)
+		obj, created = QuizTaker.objects.get_or_create(user=self.request.user, quiz=quiz)
 		if created:
 			for question in Question.objects.filter(quiz=quiz):
 				UsersAnswer.objects.create(quiz_taker=obj, question=question)
@@ -80,7 +78,7 @@ class SaveUsersAnswer(generics.UpdateAPIView):
 		question_id = request.data['question']
 		answer_id = request.data['answer']
 
-		quiztaker = get_object_or_404(QuizTakers, id=quiztaker_id)
+		quiztaker = get_object_or_404(QuizTaker, id=quiztaker_id)
 		question = get_object_or_404(Question, id=question_id)
 		answer = get_object_or_404(Answer, id=answer_id)
 
@@ -108,7 +106,7 @@ class SubmitQuizAPI(generics.GenericAPIView):
 		question_id = request.data['question']
 		answer_id = request.data['answer']
 
-		quiztaker = get_object_or_404(QuizTakers, id=quiztaker_id)
+		quiztaker = get_object_or_404(QuizTaker, id=quiztaker_id)
 		question = get_object_or_404(Question, id=question_id)
 
 		quiz = Quizzes.objects.get(slug=self.kwargs['id'])

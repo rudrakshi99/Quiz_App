@@ -69,7 +69,7 @@ class Answer(models.Model):
     
     
 
-class QuizTakers(models.Model):
+class QuizTaker(models.Model):
     
     class Meta:
         verbose_name = ("QuizTakers")
@@ -91,7 +91,7 @@ class UsersAnswer(models.Model):
         verbose_name = ("UsersAnswer")
         verbose_name_plural = ("UsersAnswers")
 
-    quiz_taker = models.ForeignKey(QuizTakers, on_delete=models.CASCADE)
+    quiz_taker = models.ForeignKey(QuizTaker, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True)
 
