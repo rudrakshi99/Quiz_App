@@ -71,8 +71,8 @@ pytestdebug.log
 *.mo
 
 # Django stuff:
-!**/migrations/**
-!**/migrations
+migrations/__pycache__
+**/migrations
 !**/migrations/__init__.py
 evn/migrations/*
 .evn/migrations/*
