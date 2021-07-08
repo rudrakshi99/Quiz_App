@@ -21,6 +21,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/quiz/', include('quiz.api.urls',namespace='quiz')),
+    path('nested_admin/', include('nested_admin.urls')), 
     path('api/accounts/', include('accounts.api.urls',namespace='accounts')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

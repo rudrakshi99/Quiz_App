@@ -1,30 +1,147 @@
-from django.http.response import HttpResponse
+from django.db.models.query_utils import Q
 from django.shortcuts import render
-from rest_framework import generics
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from quiz.models import Question, Quizzes
-from .serializers import  QuestionSerializer, QuizSerializer
+from quiz.models import Answer, Question, QuizTakers, Quizzes, UsersAnswer
+from .serializers import  MyQuizListSerializer, QuizDetailSerializer, QuizListSerializer, QuizResultSerializer, UsersAnswerSerializer
 from rest_framework import status
 
-class QuizListView(generics.ListAPIView):
+class MyQuizListAPI(generics.ListAPIView):
+	permission_classes = [
+		permissions.IsAuthenticated
+	]
+	serializer_class = MyQuizListSerializer
 
-    serializer_class = QuizSerializer
-    queryset = Quizzes.objects.all()
+	def get_queryset(self, *args, **kwargs):
+		queryset = Quizzes.objects.filter(quiztaker__user=self.request.user)
+		query = self.request.GET.get("q")
+
+		if query:
+			queryset = queryset.filter(
+				Q(name__icontains=query) |
+				Q(description__icontains=query)
+			).distinct()
+
+		return queryset
 
 
-class QuizQuestionView(APIView):
+class QuizListAPI(generics.ListAPIView):
+	serializer_class = QuizListSerializer
+	permission_classes = [
+		permissions.IsAuthenticated
+	]
 
-    def get(self, request, format=None, **kwargs):
-        quiz = Question.objects.filter(quiz__title=kwargs['topic'])
-        serializer = QuestionSerializer(quiz, many=True)
-        return Response(serializer.data)
+	def get_queryset(self, *args, **kwargs):
+		queryset = Quizzes.objects.filter(roll_out=True).exclude(quiztaker__user=self.request.user)
+		query = self.request.GET.get("q")
+
+		if query:
+			queryset = queryset.filter(
+				Q(name__icontains=query) |
+				Q(description__icontains=query)
+			).distinct()
+
+		return queryset
 
 
-# class QuestionListCreateView(generics.ListCreateAPIView):
+class QuizDetailAPI(generics.RetrieveAPIView):
+	serializer_class = QuizDetailSerializer
+	permission_classes = [
+		permissions.IsAuthenticated
+	]
 
-#     serializer_class = QuestionSerializer
-#     queryset = Question.objects.all()
+	def get(self, *args, **kwargs):
+		id = self.kwargs["id"]
+		quiz = get_object_or_404(Quizzes, id=id)
+		last_question = None
+		obj, created = QuizTakers.objects.get_or_create(user=self.request.user, quiz=quiz)
+		if created:
+			for question in Question.objects.filter(quiz=quiz):
+				UsersAnswer.objects.create(quiz_taker=obj, question=question)
+		else:
+			last_question = UsersAnswer.objects.filter(quiz_taker=obj, answer__isnull=False)
+			if last_question.count() > 0:
+				last_question = last_question.last().question.id
+			else:
+				last_question = None
+
+		return Response({'quiz': self.get_serializer(quiz, context={'request': self.request}).data, 'last_question_id': last_question})
+
+
+class SaveUsersAnswer(generics.UpdateAPIView):
+	serializer_class = UsersAnswerSerializer
+	permission_classes = [
+		permissions.IsAuthenticated
+	]
+
+	def patch(self, request, *args, **kwargs):
+		quiztaker_id = request.data['quiztaker']
+		question_id = request.data['question']
+		answer_id = request.data['answer']
+
+		quiztaker = get_object_or_404(QuizTakers, id=quiztaker_id)
+		question = get_object_or_404(Question, id=question_id)
+		answer = get_object_or_404(Answer, id=answer_id)
+
+		if quiztaker.completed:
+			return Response({
+				"message": "This quiz is already complete. you can't answer any more questions"},
+				status=status.HTTP_412_PRECONDITION_FAILED
+			)
+
+		obj = get_object_or_404(UsersAnswer, quiz_taker=quiztaker, question=question)
+		obj.answer = answer
+		obj.save()
+
+		return Response(self.get_serializer(obj).data)
+
+
+class SubmitQuizAPI(generics.GenericAPIView):
+	serializer_class = QuizResultSerializer
+	permission_classes = [
+		permissions.IsAuthenticated
+	]
+
+	def post(self, request, *args, **kwargs):
+		quiztaker_id = request.data['quiztaker']
+		question_id = request.data['question']
+		answer_id = request.data['answer']
+
+		quiztaker = get_object_or_404(QuizTakers, id=quiztaker_id)
+		question = get_object_or_404(Question, id=question_id)
+
+		quiz = Quizzes.objects.get(slug=self.kwargs['id'])
+
+		if quiztaker.completed:
+			return Response({
+				"message": "This quiz is already complete. You can't submit again"},
+				status=status.HTTP_412_PRECONDITION_FAILED
+			)
+
+		if answer_id is not None:
+			answer = get_object_or_404(Answer, id=answer_id)
+			obj = get_object_or_404(UsersAnswer, quiz_taker=quiztaker, question=question)
+			obj.answer = answer
+			obj.save()
+
+		quiztaker.completed = True
+		correct_answers = 0
+
+		for users_answer in UsersAnswer.objects.filter(quiz_taker=quiztaker):
+			answer = Answer.objects.get(question=users_answer.question, is_correct=True)
+			print(answer)
+			print(users_answer.answer)
+			if users_answer.answer == answer:
+				correct_answers += 1
+
+		quiztaker.score = int(correct_answers / quiztaker.quiz.question_set.count() * 100)
+		print(quiztaker.score)
+		quiztaker.save()
+
+		return Response(self.get_serializer(quiz).data)
+
+
 
     
     

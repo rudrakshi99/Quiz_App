@@ -1,22 +1,31 @@
 from django.contrib import admin
-from . import models
+from .models import Quizzes, Question, Answer, UsersAnswer, QuizTakers, Category
+import nested_admin
 
-admin.site.register(models.Category)
-admin.site.register(models.Quizzes)
-admin.site.register(models.Answer)
-
-class AnswerInlineModel(admin.TabularInline):
-    model = models.Answer
-    fields = [
-        'answer_text', 
-        'is_right'
-        ]
-
-@admin.register(models.Question)
-
-class QuestionAdmin(admin.ModelAdmin):
-    inlines = [
-        AnswerInlineModel, 
-        ] 
-
+class AnswerInline(nested_admin.NestedTabularInline):
+    model = Answer
+    extra = 4
+    max_num = 4
+    
+class QuestionInline(nested_admin.NestedTabularInline):
+    model = Question
+    inlines = [AnswerInline,]
+    extra = 10
+    
+class QuizAdmin(nested_admin.NestedModelAdmin):
+    inlines = [QuestionInline,]
+    
+class UsersAnswerInline(admin.TabularInline):
+    model = UsersAnswer
+    
+class QuizTakersAdmin(admin.ModelAdmin):
+    inlines = [UsersAnswerInline,]
+    
+    
+admin.site.register(QuizTakers, QuizTakersAdmin)
+admin.site.register(Quizzes, QuizAdmin)
+admin.site.register(UsersAnswer)
+admin.site.register(Category)
+admin.site.register(Question)
+admin.site.register(Answer)
 
