@@ -106,7 +106,7 @@ class QuizResultSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Quizzes
-		fields = "__all__"
+		fields = ("__all__")
 
 	def get_quiztaker_set(self, obj):
 		try:

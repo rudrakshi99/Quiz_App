@@ -89,6 +89,7 @@ class SaveUsersAnswer(generics.UpdateAPIView):
 			)
 
 		obj = get_object_or_404(UsersAnswer, quiz_taker=quiztaker, question=question)
+		print(obj)
 		obj.answer = answer
 		obj.save()
 
@@ -109,7 +110,7 @@ class SubmitQuizAPI(generics.GenericAPIView):
 		quiztaker = get_object_or_404(QuizTaker, id=quiztaker_id)
 		question = get_object_or_404(Question, id=question_id)
 
-		quiz = Quizzes.objects.get(slug=self.kwargs['id'])
+		quiz = Quizzes.objects.get(id=self.kwargs['id'])
 
 		if quiztaker.completed:
 			return Response({
