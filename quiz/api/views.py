@@ -134,7 +134,7 @@ class SubmitQuizAPI(generics.GenericAPIView):
 			if users_answer.answer == answer:
 				correct_answers += 1
 
-		quiztaker.score = int(correct_answers / quiztaker.quiz.question_set.count() * 100)
+		quiztaker.score = int(correct_answers / quiztaker.quiz.question.count() * 100)
 		print(quiztaker.score)
 		quiztaker.save()
 
