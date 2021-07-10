@@ -103,7 +103,7 @@ class SubmitQuizAPI(generics.GenericAPIView):
 	]
 
 	def post(self, request, *args, **kwargs):
-		quiztaker_id = request.data['quiztaker']
+		quiztaker_id = request.data['quiz_taker']
 		question_id = request.data['question']
 		answer_id = request.data['answer']
 
@@ -128,7 +128,7 @@ class SubmitQuizAPI(generics.GenericAPIView):
 		correct_answers = 0
 
 		for users_answer in UsersAnswer.objects.filter(quiz_taker=quiztaker):
-			answer = Answer.objects.get(question=users_answer.question, is_correct=True)
+			answer = Answer.objects.get(question=users_answer.question, is_right=True)
 			print(answer)
 			print(users_answer.answer)
 			if users_answer.answer == answer:
