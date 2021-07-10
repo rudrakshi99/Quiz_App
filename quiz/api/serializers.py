@@ -24,13 +24,13 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Question
-		fields = "__all__"
+		fields = ("__all__")
 
 
 class UsersAnswerSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = UsersAnswer
-		fields = "__all__"
+		fields = ("__all__")
 
 
 class MyQuizListSerializer(serializers.ModelSerializer):
@@ -80,7 +80,7 @@ class QuizTakerSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = QuizTaker
-		fields = "__all__"
+		fields = ("__all__")
 
 
 class QuizDetailSerializer(serializers.ModelSerializer):
@@ -89,7 +89,7 @@ class QuizDetailSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Quizzes
-		fields = "__all__"
+		fields = ("__all__")
 
 	def get_quiztakers_set(self, obj):
 		try:

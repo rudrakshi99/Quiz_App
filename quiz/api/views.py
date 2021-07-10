@@ -14,7 +14,7 @@ class MyQuizListAPI(generics.ListAPIView):
 	serializer_class = MyQuizListSerializer
 
 	def get_queryset(self, *args, **kwargs):
-		queryset = Quizzes.objects.filter(quiztaker__user=self.request.user)
+		queryset = Quizzes.objects.filter(quiztaker__user=self.request.user) #show attempted quizzes only by the user
 		query = self.request.GET.get("q")
 
 		if query:
@@ -74,7 +74,7 @@ class SaveUsersAnswer(generics.UpdateAPIView):
 	]
 
 	def patch(self, request, *args, **kwargs):
-		quiztaker_id = request.data['quiztaker']
+		quiztaker_id = request.data['quiz_taker']
 		question_id = request.data['question']
 		answer_id = request.data['answer']
 
