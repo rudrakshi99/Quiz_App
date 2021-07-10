@@ -9,6 +9,7 @@ The quiz application having MCQs related to various categories where the user ca
 
 - **Backend**: Django Rest Framework
 - **IDE**: VS Code
+- **API Testing & Documentation:** Swagger
 - **Version Control**: Git and GitHub
 - **Database**: Sqlite
 
