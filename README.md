@@ -17,11 +17,7 @@ The quiz application having MCQs related to various categories where the user ca
 
 - Fork and Clone the repo using
 ```
-$ git clone https://github.com/nakul-19/Blog-Wall.git
-```
-- Change Branch to `backend` using 
-```
-$ git checkout backend
+$ git clone https://github.com/rudrakshi99/Quiz_App.git
 ```
 - Setup Virtual environment
 ```
