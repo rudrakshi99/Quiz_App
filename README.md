@@ -2,6 +2,13 @@
 
 The quiz application having MCQs related to various categories where the user can roll out from his previous question and can attempt only once.
 
+## Features: 
+1) Admin is able to create.
+2) Authenticated Users can be attempt the quiz.
+3) Each quiz is related to specific can have 1 or more questions and the question types can be MCQ (2-4 options) or open text.
+4) A question will have text and optionally an image.
+5) A user can be able to see the list of quizzes (live, past and upcoming).
+6) A user can be able to attempt live quizzes (at max once) and can roll out from where they left.
 
 ## Technology Stack to be used:
 
