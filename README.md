@@ -20,7 +20,7 @@ The quiz application having MCQs related to various categories where the user ca
 - **Version Control**: Git and GitHub
 - **Database**: Sqlite
 
-### Backend Setup Instructions
+### Backend Setup Instructions :+1:
 
 - Fork and Clone the repo using
 ```
