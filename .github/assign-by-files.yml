@@ -1,0 +1,7 @@
+---
+# you can use glob pattern
+'*.js':
+  - rudrakshi99
+# you can set multiple reviewers
+'.github/**/*.yml':
+  - rudrakshi99
