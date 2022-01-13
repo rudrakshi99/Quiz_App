@@ -1,4 +1,12 @@
-# Quiz_App
+# Quiz API
+
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Features](#features)
+3. [Technology](#technology)
+4. [Backend Setup Instructions](#backend-setup-instructions)
+
+## Introduction
 
 The quiz application having MCQs related to various categories where the user can roll out from his previous question and can attempt only once.
 
@@ -10,7 +18,7 @@ The quiz application having MCQs related to various categories where the user ca
 5) A user can be able to see the list of quizzes (live, past and upcoming).
 6) A user can be able to attempt live quizzes (at max once) and can roll out from where they left.
 
-## Technology Stack to be used:
+## Technology:
 
 <img src="https://img.shields.io/badge/python%20-%2314354C.svg?&style=for-the-badge&logo=python&logoColor=white"/> <img src="https://img.shields.io/badge/django%20-%23092E20.svg?&style=for-the-badge&logo=django&logoColor=white"/>  <img src="https://img.shields.io/badge/markdown-%23000000.svg?&style=for-the-badge&logo=markdown&logoColor=white"/><img src="https://img.shields.io/badge/github%20-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white"/> <img src="https://img.shields.io/badge/sqlite-0B96B2?style=for-the-badge&logo=sqlite&logoColor=white"/> 
 
